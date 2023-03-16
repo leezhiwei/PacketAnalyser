@@ -31,4 +31,4 @@ for row in iter(p.stdout.readline, b''): # for each row written to STDOUT for Tc
         isdestpriv = ipaddress.ip_address(srcip).is_private # check if source IP is private
         print(f'Source IP: {srcip}, IsSourcePrivate: {issrcpriv}, Source Port: {srcport}, Destination IP: {destip}, IsDestinationPrivate: {isdestpriv}, Destination Port: {destport}, Protocol: {proto}, Length : {length}')
         # print out info
-        ping = False
+        ping = False # after the packet reset value
