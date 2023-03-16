@@ -5,8 +5,19 @@ import signal
 def endproc(signum, frame, pidtcpdump):
     os.killpg(os.getpgid(pidtcpdump), signal.SIGTERM) # function in case you CTRL + C ends tcpdump gracefully
 
-def resolvehostname(iporhostname): # resolve into IP if hostname
+def resolvehostname(iporhostname, ping): # resolve into IP if hostname
     splittediporhostname = iporhostname.split('.') # split into list
+    if ping: # if ICMP/Ping request
+        for p in splittediporhostname: # try to see if IP
+            try:
+                int(p) # try to turn to int
+            except:
+                ip = socket.gethostbyname(iporhostname) # if not get IP
+                port = "ICMP" # set port to ICMP or ping
+                return ip, port # return values
+        ip = iporhostname # if able to complete loop, put in initial IP
+        port = "ICMP" # set port to ICMP
+        return ip, port # return vals
     port = splittediporhostname[-1] # get port from negative index
     if len(splittediporhostname) != 5: # if len is not 5 , eg using hostname
         hostname = '' # init hostname var
