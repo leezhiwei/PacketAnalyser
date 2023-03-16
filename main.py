@@ -1,8 +1,9 @@
 import signal
 import subprocess as sub # importing modules
+import ipaddress
 from functions import *
 
-interface = 'wlp2s0' # set interface eg tun0, wlan0, eth0 etc
+interface = 'tun0' # set interface eg tun0, wlan0, eth0 etc
 p = sub.Popen(('sudo', 'tcpdump', '-l', '-i', interface), stdout=sub.PIPE) # open tcpdump with a subprocess
 pidtcpdump = p.pid # set the PID of tcpdump
 
@@ -18,6 +19,8 @@ for row in iter(p.stdout.readline, b''): # for each row written to STDOUT for Tc
         proto = splitted[ipindex + 4] # protocol like TCP/UDP
         length = splitted[-1] # get length from last index
         srcip, srcport = resolvehostname(srciporhostname) # use function to get src IP and Port
+        issrcpriv = ipaddress.ip_address(srcip).is_private # check if source IP is private
         destip, destport = resolvehostname(destiporhostname) # use function to get dest IP and Port
-        print(f'Source IP: {srcip}, Source Port: {srcport}, Destination IP: {destip}, Destination Port: {destport}, Protocol: {proto}, Length : {length}')
+        isdestpriv = ipaddress.ip_address(srcip).is_private # check if source IP is private
+        print(f'Source IP: {srcip}, IsSourcePrivate: {issrcpriv}, Source Port: {srcport}, Destination IP: {destip}, IsDestinationPrivate: {isdestpriv}, Destination Port: {destport}, Protocol: {proto}, Length : {length}')
         # print out info

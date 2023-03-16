@@ -22,5 +22,11 @@ def resolvehostname(iporhostname): # resolve into IP if hostname
             hostname = splittediporhostname[0] # take front part as hostname
         ip = socket.gethostbyname(hostname) # get IP
     else: # if IP address (192.168.1.1:8080)
-        ip = iporhostname.strip('.' + port) # strip off port part
+        ip = iporhostname.replace('.' + port, "") # strip off port part
+        for p in ip.split('.'): # if multi part hostname (eg AWS)
+            try:
+                int(p) # try to turn into int()
+            except:
+                ip = socket.gethostbyname(ip) # resolve host name
+                break # break out
     return ip, port # return end IP and port
